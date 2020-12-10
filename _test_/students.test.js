@@ -64,4 +64,25 @@ describe('students routes', () => {
     expect(res.body).toHaveLength(students.length);
   });
 
+  it('updates a student via PUT', async() => {
+    const student = await Student.insert({
+      name: 'Jamal',
+      email: 'jamal@email.com',
+    });
+
+    const res = await request(app)
+      .put(`/api/v1/students/${student.id}`)
+      .send({
+        name: 'Jamal',
+        email: 'jamal1@email.com',
+      });
+    
+    expect(res.body).toEqual({
+      id: student.id,
+      name: 'Jamal',
+      email: 'jamal1@email.com',
+    });
+
+  });
+
 });
