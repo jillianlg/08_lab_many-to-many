@@ -41,4 +41,27 @@ describe('subjects routes', () => {
     expect(res.body).toEqual(subject);
   });
 
+  it('finds all subjects via GET', async() => {
+    const subjects = await Promise.all([
+      {
+        topic: 'Dev 101',
+        instructor: 'Dani',
+      },
+      {
+        topic: 'Dev 201',
+        instructor: 'Dani',
+      },
+      {
+        topic: 'Dev 301',
+        instructor: 'Ryan',
+      }
+    ].map(subject => Subject.insert(subject)));
+
+    const res = await request(app)
+      .get('/api/v1/subjects');
+    
+    expect(res.body).toEqual(expect.arrayContaining(subjects));
+    expect(res.body).toHaveLength(subjects.length);
+  });
+
 });
