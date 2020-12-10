@@ -85,4 +85,16 @@ describe('subjects routes', () => {
 
   });
 
+  it('removes a subject via DELETE', async() => {
+    const subject = await Subject.insert({
+      topic: 'Dev 401',
+      instructor: 'Ryan', 
+    });
+    
+    const response = await request(app)
+      .delete(`/api/v1/subjects/${subject.id}`);
+
+    expect(response.body).toEqual(subject);
+  });
+
 });
