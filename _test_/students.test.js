@@ -41,4 +41,27 @@ describe('students routes', () => {
     expect(res.body).toEqual(student);
   });
 
+  it('finds all students via GET', async() => {
+    const students = await Promise.all([
+      {
+        name: 'Jamal',
+        email: 'jamal@email.com',
+      },
+      {
+        name: 'Jamie',
+        email: 'Jamie@email.com',
+      },
+      {
+        name: 'Jodi',
+        email: 'Jodi@email.com',
+      }
+    ].map(student => Student.insert(student)));
+
+    const res = await request(app)
+      .get('/api/v1/students');
+    
+    expect(res.body).toEqual(expect.arrayContaining(students));
+    expect(res.body).toHaveLength(students.length);
+  });
+
 });
