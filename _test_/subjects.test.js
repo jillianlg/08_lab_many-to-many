@@ -1,6 +1,7 @@
 const fs = require('fs');
 const request = require('supertest');
 const app = require('../lib/app');
+const Subject = require('../lib/models/Subject');
 const pool = require('../lib/utils/pool');
     
 describe('subjects routes', () => {
@@ -26,6 +27,18 @@ describe('subjects routes', () => {
       topic: 'Dev 101',
       instructor: 'Dani',
     });
+  });
+
+  it('finds a subject by id via GET', async() => {
+    const subject = await Subject.insert({
+      topic: 'Dev 101',
+      instructor: 'Dani',
+    });
+
+    const res = await request(app)
+      .get(`/api/v1/subjects/${subject.id}`);
+
+    expect(res.body).toEqual(subject);
   });
 
 });
