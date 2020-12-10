@@ -85,6 +85,16 @@ describe('students routes', () => {
 
   });
 
+  it('removes a student via DELETE', async() => {
+    const student = await Student.insert({
+      name: 'Jamal',
+      email: 'jamal1@email.com', 
+    });
+    
+    const response = await request(app)
+      .delete(`/api/v1/students/${student.id}`);
 
+    expect(response.body).toEqual(student);
+  });
 
 });
