@@ -64,4 +64,25 @@ describe('subjects routes', () => {
     expect(res.body).toHaveLength(subjects.length);
   });
 
+  it('updates a subject via PUT', async() => {
+    const subject = await Subject.insert({
+      topic: 'Dev 301',
+      instructor: 'Ryan',
+    });
+
+    const res = await request(app)
+      .put(`/api/v1/subjects/${subject.id}`)
+      .send({
+        topic: 'Dev 401',
+        instructor: 'Ryan',
+      });
+    
+    expect(res.body).toEqual({
+      id: subject.id,
+      topic: 'Dev 401',
+      instructor: 'Ryan',
+    });
+
+  });
+
 });
