@@ -1,6 +1,7 @@
 const fs = require('fs');
 const request = require('supertest');
 const app = require('../lib/app');
+const Student = require('../lib/models/Student');
 const Subject = require('../lib/models/Subject');
 const pool = require('../lib/utils/pool');
     
@@ -29,16 +30,39 @@ describe('subjects routes', () => {
     });
   });
 
-  it('finds a subject by id via GET', async() => {
+  // it('finds a subject by id via GET', async() => {
+  //   const subject = await Subject.insert({
+  //     topic: 'Dev 101',
+  //     instructor: 'Dani',
+  //   });
+
+  //   const res = await request(app)
+  //     .get(`/api/v1/subjects/${subject.id}`);
+
+  //   expect(res.body).toEqual(subject);
+  // });
+
+  it('finds a subject and associates a student by id via GET', async() => {
+    await Promise.all([
+      { name: 'Jamal', email: 'Jamal@email.com' },
+      { name: 'Jodi', email: 'Jodi@email.com' },
+      { name: 'Joey', email: 'Joey@email.com' }
+    ].map(subject => Student.insert(subject)));
+
     const subject = await Subject.insert({
-      topic: 'Dev 101',
+      topic: 'Dev 101', 
       instructor: 'Dani',
+      students: ['Jamal', 'Jodi']
     });
 
-    const res = await request(app)
+    const response = await request(app)
       .get(`/api/v1/subjects/${subject.id}`);
 
-    expect(res.body).toEqual(subject);
+    expect(response.body).toEqual({
+      ...subject,
+      students: ['Jamal', 'Jodi']
+    });
+  
   });
 
   it('finds all subjects via GET', async() => {
